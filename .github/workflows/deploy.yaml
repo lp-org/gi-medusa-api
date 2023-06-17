@@ -32,7 +32,7 @@ jobs:
           remote_key: ${{ secrets.SERVER_PRIVATE_KEY }}
 
       - name: SSH into server and restart PM2
-        uses: appleboy/ssh-action@v0.2.1
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
