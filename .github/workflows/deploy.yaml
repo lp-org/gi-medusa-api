@@ -23,7 +23,7 @@ jobs:
         run: npm run build
 
       - name: Sync files via rsync
-        uses: burnett01/rsync-deployments@v2
+        uses: burnett01/rsync-deployments@6.0.0
         with:
           switches: -avz --delete
           remote_path: /home/ec2-user/medusa-api
