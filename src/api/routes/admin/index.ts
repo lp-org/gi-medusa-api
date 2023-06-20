@@ -1,21 +1,20 @@
-import cors from "cors";
 import { Router } from "express";
-import bodyParser from "body-parser";
-import customRouteHandler from "./custom-route-handler";
-import { authenticate, wrapHandler } from "@medusajs/medusa";
-import errorHandler from "@medusajs/medusa/dist/api/middlewares/error-handler";
 import roleRouter from "./role";
+import permissionRouter from "./permission";
+import inviteRouter from "./invite";
+import userRouter from "./user";
+import authRouter from "./auth";
+import errorHandler from "@medusajs/medusa/dist/api/middlewares/error-handler";
+export function attachAdminRoutes(storeRouter: Router) {
+  // Define a GET endpoint on the root route of our custom path
+  storeRouter.use("/roles", roleRouter);
 
-const adminRouter = Router();
-export function getAdminRouter(adminCorsOptions): Router {
-  adminRouter.use(
-    /\/admin\/((?!auth).*)/,
-    cors(adminCorsOptions),
-    bodyParser.json(),
-    authenticate()
-  );
+  storeRouter.use("/permissions", permissionRouter);
 
-  adminRouter.use("/admin", roleRouter);
-  adminRouter.use(errorHandler());
-  return adminRouter;
+  storeRouter.use("/invites", inviteRouter);
+
+  storeRouter.use("/users", userRouter);
+
+  storeRouter.use("/auth", authRouter);
+  storeRouter.use(errorHandler());
 }

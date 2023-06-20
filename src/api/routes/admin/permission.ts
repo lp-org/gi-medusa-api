@@ -1,13 +1,79 @@
 import { Router } from "express";
 import PermissionRepository from "../../../repositories/permission";
-const router = Router();
-router.get(
-  "/permissions",
+import {
+  FindParams,
+  buildQuery,
+  extendedFindParamsMixin,
+  transformQuery,
+  wrapHandler,
+} from "@medusajs/medusa";
+import { IsArray, IsOptional, IsString, ValidateNested } from "class-validator";
+import { buildRelations } from "@medusajs/utils";
+import RoleRepository from "../../../repositories/role";
+import { validator } from "@medusajs/medusa/dist/utils/validator";
+import { Permission } from "../../../models/Permission";
 
-  async (req, res) => {
+const router = Router();
+
+class AdminPermissionGetParams extends extendedFindParamsMixin({
+  limit: 20,
+  offset: 0,
+}) {
+  @IsString()
+  @IsOptional()
+  "role_id"?: string;
+}
+
+// class Permission {
+//   @IsString()
+//   id: string;
+// }
+class AdminPermissionRolePostParams {
+  @IsArray()
+  "permission"?: Permission[];
+}
+
+router.get(
+  "/",
+  transformQuery(AdminPermissionGetParams, {
+    defaultFields: ["role_id"],
+
+    isList: true,
+  }),
+  wrapHandler(async (req, res) => {
+    const { filterableFields } = req;
+
     const data = await PermissionRepository.find();
-    res.json({
-      data,
-    });
-  }
+    res.json(data);
+  })
 );
+
+router.get("/", async (req, res) => {
+  const data = await PermissionRepository.find();
+  res.json(data);
+});
+
+router.put(
+  "/role/:roleId",
+  wrapHandler(async (req, res) => {
+    const validated = await validator(AdminPermissionRolePostParams, req.body);
+    const role = await RoleRepository.findOne({
+      where: { id: req.params.roleId },
+      relations: { permissions: true },
+    });
+    // delete role.permissions;
+    console.log(role);
+
+    console.log(validated.permission);
+    // const data = await RoleRepository.({
+    //   permissions: validated.permission,
+
+    // },{data:});
+    role.permissions = validated.permission;
+    RoleRepository.save(role);
+
+    res.json(role);
+  })
+);
+
+export default router;

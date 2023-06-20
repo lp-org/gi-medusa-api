@@ -18,7 +18,17 @@ export class Permission extends BaseEntity {
   metadata: Record<string, unknown>;
 
   @ManyToMany(() => Role, (role) => role.permissions)
-  @JoinTable()
+  @JoinTable({
+    name: "role_permissions_permission",
+    joinColumn: {
+      name: "role_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "permission_id",
+      referencedColumnName: "id",
+    },
+  })
   roles: Role[];
 
   @BeforeInsert()

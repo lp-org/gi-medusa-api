@@ -14,12 +14,19 @@ import { validator } from "@medusajs/medusa/dist/utils/validator";
 
 const router = Router();
 router.get(
-  "/roles",
-  transformQuery(FindPaginationParams, { isList: true }),
+  "/",
+  transformQuery(FindPaginationParams, {
+    defaultFields: ["role_id"],
+    defaultRelations: ["role"],
+    isList: true,
+  }),
   async (req, res) => {
     const { skip, take, relations } = req.listConfig;
     const count = await RoleRepository.count();
-    const data = await RoleRepository.find(buildQuery({}, req.listConfig));
+    const data = await RoleRepository.createQueryBuilder("role")
+
+      .loadRelationCountAndMap("role.permissionsCount", "role.permissions")
+      .getMany();
     res.json({
       count,
       data,
@@ -35,7 +42,7 @@ export class AdminPostRolesReq {
 }
 
 router.post(
-  "/roles",
+  "/",
   wrapHandler(async (req, res) => {
     req.user;
     const validated = await validator(AdminPostRolesReq, req.body);
@@ -46,7 +53,7 @@ router.post(
 );
 
 router.put(
-  "/roles/:role_id",
+  "/:role_id",
   wrapHandler(async (req, res) => {
     req.user;
     const validated = await validator(AdminPostRolesReq, req.body);
@@ -56,6 +63,33 @@ router.put(
     data.name = validated.name;
     const result = await RoleRepository.save(data);
     res.json(result);
+  })
+);
+
+router.get(
+  "/:role_id",
+  wrapHandler(async (req, res) => {
+    req.user;
+
+    const data = await RoleRepository.findOne({
+      where: { id: req.params.role_id },
+      relations: { permissions: true },
+    });
+
+    res.json(data);
+  })
+);
+
+router.delete(
+  "/:role_id",
+  wrapHandler(async (req, res) => {
+    req.user;
+
+    const data = await RoleRepository.delete({
+      id: req.params.role_id,
+    });
+
+    res.json(data);
   })
 );
 
