@@ -28,19 +28,19 @@ router.get(
         relations: ["teamRole.permissions"],
       });
       result = { ...user };
-      //   if (user.metadata) {
-      //     if (user.metadata.superadmin) {
-      //       result = {
-      //         ...result,
-      //         teamRole: {
-      //           name: "superadmin",
-      //           permissions: permissionList,
-      //         },
-      //       };
-      //       //   user.teamRole = "superadmin";
-      //       //   user.teamRole.permissions = permissionList;
-      //     }
-      //   }
+      if (user.metadata) {
+        if (user.metadata.superadmin) {
+          result = {
+            ...result,
+            teamRole: {
+              name: "superadmin",
+              permissions: permissionList,
+            },
+          };
+          //   user.teamRole = "superadmin";
+          //   user.teamRole.permissions = permissionList;
+        }
+      }
 
       const cleanRes = _.omit(result, ["password_hash"]);
       res.status(200).json({ user: cleanRes });
