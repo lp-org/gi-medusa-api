@@ -25,6 +25,7 @@ export class InviteAddRoleId1687196861371 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropForeignKey("invite", "role_id");
     await queryRunner.dropColumn("invite", "role_id");
   }
 }

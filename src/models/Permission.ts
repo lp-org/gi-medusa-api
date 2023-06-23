@@ -11,6 +11,9 @@ export class Permission extends BaseEntity {
   @Column({ type: "varchar" })
   name: string;
 
+  @Column({ type: "varchar", nullable: true })
+  label: string;
+
   @Column({ type: "int" })
   order: number;
 

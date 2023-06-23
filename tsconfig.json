@@ -14,7 +14,7 @@
     "sourceMap": false,
     "outDir": "./dist",
     "rootDir": "src",
-
+    "noEmitOnError": false
   },
   "include": ["src"],
   "exclude": [

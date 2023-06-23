@@ -43,15 +43,10 @@ router.get(
   wrapHandler(async (req, res) => {
     const { filterableFields } = req;
 
-    const data = await PermissionRepository.find();
+    const data = await PermissionRepository.find({ order: { order: "asc" } });
     res.json(data);
   })
 );
-
-router.get("/", async (req, res) => {
-  const data = await PermissionRepository.find();
-  res.json(data);
-});
 
 router.put(
   "/role/:roleId",
@@ -62,9 +57,7 @@ router.put(
       relations: { permissions: true },
     });
     // delete role.permissions;
-    console.log(role);
 
-    console.log(validated.permission);
     // const data = await RoleRepository.({
     //   permissions: validated.permission,
 

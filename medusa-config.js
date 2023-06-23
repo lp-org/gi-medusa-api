@@ -37,12 +37,20 @@ const plugins = [
   `medusa-fulfillment-manual`,
   `medusa-payment-manual`,
   {
+    resolve: `medusa-payment-stripe`,
+    options: {
+      api_key: process.env.STRIPE_SECRET_KEY,
+      webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+    },
+  },
+  {
     resolve: `@medusajs/file-local`,
     options: {
       upload_dir: "uploads",
       backend_url: process.env.BACKEND_URL || "http://localhost:9000",
     },
   },
+
   // To enable the admin plugin, uncomment the following lines and run `yarn add @medusajs/admin`
   // {
   //   resolve: "@medusajs/admin",
@@ -79,6 +87,8 @@ const projectConfig = {
   admin_cors: ADMIN_CORS,
   // Uncomment the following lines to enable REDIS
   redis_url: REDIS_URL,
+  upload_dir: "uploads",
+  backend_url: process.env.BACKEND_URL || "http://localhost:9000",
 };
 
 /** @type {import('@medusajs/medusa').ConfigModule} */
@@ -87,7 +97,7 @@ module.exports = {
   plugins,
   modules,
   featureFlags: {
-    product_categories: true,
+    // product_categories: true,
     tax_inclusive_pricing: true,
   },
 };

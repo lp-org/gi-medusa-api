@@ -7,7 +7,6 @@ import {
   FindParams,
   FindPaginationParams,
 } from "@medusajs/medusa";
-import { MedusaError } from "medusa-core-utils";
 import RoleRepository from "../../../repositories/role";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 import { validator } from "@medusajs/medusa/dist/utils/validator";

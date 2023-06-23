@@ -2,70 +2,10 @@ import { ProductService } from "@medusajs/medusa";
 import { AwilixContainer } from "awilix";
 import PermissionRepository from "./../repositories/permission";
 import { EntityManager } from "typeorm";
-import { Permission } from "../models/Permission";
 
-const permissionList = [
-  {
-    name: "products.view",
-  },
-  {
-    name: "products.add",
-  },
-  {
-    name: "orders.view",
-  },
-  {
-    name: "customers.view",
-  },
-  {
-    name: "discounts.view",
-  },
-  {
-    name: "discounts.add",
-  },
-  {
-    name: "pricings.view",
-  },
-  {
-    name: "pricings.add",
-  },
-  {
-    name: "giftcard.add",
-  },
-  {
-    name: "giftcard.view",
-  },
-  {
-    name: "setting.reigons",
-  },
-  {
-    name: "setting.currencies",
-  },
-  {
-    name: "setting.store-details",
-  },
-  {
-    name: "setting.return-reasons",
-  },
-  {
-    name: "setting.the-team",
-  },
-  {
-    name: "setting.roles",
-  },
-  {
-    name: "setting.personal-information",
-  },
-  {
-    name: "setting.tax",
-  },
-  {
-    name: "setting.sales-channels",
-  },
-  {
-    name: "setting.api-key-management",
-  },
-];
+import { permissionList } from "../utils/permissions";
+import UserRepository from "../repositories/user";
+import { setMetadata } from "@medusajs/utils";
 
 export default async (
   container: AwilixContainer,
@@ -77,23 +17,32 @@ export default async (
   );
   const entityManager = container.resolve<EntityManager>("manager");
   const permissionRepo = entityManager.withRepository(permissionRepository);
+  const userRepo = entityManager.withRepository(UserRepository);
   const permissionCount = await permissionRepo.count();
 
-  if (permissionCount == 0) {
+  if (permissionCount !== permissionList.length) {
     console.info("seed permission");
-    // await permissionRepo
-    //   .createQueryBuilder()
-    //   .insert()
-    //   .into(Permission)
-    //   .values([
-    //     {
-    //       name: "product-view",
-    //     },
-    //   ])
-    //   .execute();
+
     for (const perm of permissionList) {
-      const data = permissionRepo.create(perm);
-      await permissionRepo.save(data);
+      const { name, label } = perm;
+      const permission = await permissionRepo.findOne({
+        where: { name: perm.name },
+      });
+      if (permission) {
+        permissionRepo.save({ ...permission, name, label });
+      } else {
+        const data = permissionRepo.create({ name, label });
+        await permissionRepo.save(data);
+      }
+    }
+  }
+
+  const users = await userRepo.find({ order: { created_at: "asc" } });
+  if (users) {
+    const superadmin = users[0];
+    if (superadmin) {
+      superadmin.metadata = setMetadata(superadmin, { superadmin: true });
+      await userRepo.save(superadmin);
     }
   }
   console.info("Ending loader...");

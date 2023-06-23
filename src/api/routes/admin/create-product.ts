@@ -20,7 +20,6 @@ export default function (adminCorsOptions) {
     cors(adminCorsOptions),
     authenticate(),
     (req, res) => {
-      console.log("asdasdasdas");
       const productService = req.scope.resolve("productService");
 
       productService.count().then((count) => {

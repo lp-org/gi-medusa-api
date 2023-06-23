@@ -5,6 +5,7 @@ import { UpdateUserInput } from "@medusajs/medusa/dist/types/user";
 import { isDefined, setMetadata } from "@medusajs/utils";
 import { MedusaError } from "medusa-core-utils";
 import { EntityManager } from "typeorm";
+import { Permission } from "../models/Permission";
 // 7 days
 
 export interface UpdateUserWithRoleIdInput
@@ -65,37 +66,13 @@ class UserService extends MedusaUserService {
     });
   }
 
-  /**
-   * Gets a user by id.
-   * Throws in case of DB Error and if user was not found.
-   * @param {string} userId - the id of the user to get.
-   * @param {FindConfig} config - query configs
-   * @return {Promise<User>} the user document.
-   */
-  async retrieveWithPermissions(
-    userId: string,
-    config: FindConfig<User> = {}
-  ): Promise<User> {
-    if (!isDefined(userId)) {
-      throw new MedusaError(
-        MedusaError.Types.NOT_FOUND,
-        `"userId" must be defined`
-      );
-    }
-
-    const userRepo = this.activeManager_.withRepository(this.userRepository_);
-    const query = buildQuery({ id: userId }, config);
-
-    const user = await userRepo.findOne(query);
-
-    if (!user) {
-      throw new MedusaError(
-        MedusaError.Types.NOT_FOUND,
-        `User with id: ${userId} was not found`
-      );
-    }
-
-    return user;
+  async retrieveUserPermission(userId: string): Promise<Permission[]> {
+    return await this.atomicPhase_(async (manager: EntityManager) => {
+      const user: User = await this.retrieve(userId, {
+        relations: ["teamRole.permissions"],
+      });
+      return user.teamRole ? user.teamRole.permissions : [];
+    });
   }
 }
 
