@@ -12,6 +12,7 @@ export class InviteAddRoleId1687196861371 implements MigrationInterface {
       new TableColumn({
         name: "role_id",
         type: "varchar",
+        isNullable: true,
       })
     );
     await queryRunner.createForeignKey(
