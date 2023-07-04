@@ -4,8 +4,11 @@ import permissionRouter from "./permission";
 import inviteRouter from "./invite";
 import userRouter from "./user";
 import authRouter from "./auth";
+import storeContentRouter from "./store-content";
+import pagesRouter from "./pages";
 import errorHandler from "@medusajs/medusa/dist/api/middlewares/error-handler";
 import { permissions } from "../../middlewares/permissions";
+
 import { wrapHandler } from "@medusajs/medusa";
 import redisClient from "../../../utils/redis-client";
 
@@ -25,5 +28,7 @@ export function attachAdminRoutes(storeRouter: Router) {
 
   storeRouter.use("/auth", authRouter);
 
+  storeRouter.use("/store-content", storeContentRouter);
+  storeRouter.use("/pages", pagesRouter);
   storeRouter.use(errorHandler());
 }

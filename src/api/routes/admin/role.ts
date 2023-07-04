@@ -1,30 +1,35 @@
 import { Router } from "express";
 import {
   wrapHandler,
-  buildQuery,
-  transformStoreQuery,
   transformQuery,
-  FindParams,
   FindPaginationParams,
 } from "@medusajs/medusa";
 import RoleRepository from "../../../repositories/role";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsString } from "class-validator";
 import { validator } from "@medusajs/medusa/dist/utils/validator";
-
+import { buildQuery } from "@medusajs/medusa";
+import { MedusaError } from "@medusajs/utils";
+import UserRepository from "../../../repositories/user";
+import { EntityManager } from "typeorm";
+import PermissionRepository from "../../../repositories/permission";
+import InviteRepository from "../../../repositories/invite";
 const router = Router();
 router.get(
   "/",
   transformQuery(FindPaginationParams, {
-    defaultFields: ["role_id"],
-    defaultRelations: ["role"],
     isList: true,
   }),
   async (req, res) => {
     const { skip, take, relations } = req.listConfig;
+    const query = buildQuery({}, req.listConfig);
+
     const count = await RoleRepository.count();
     const data = await RoleRepository.createQueryBuilder("role")
-
+      .setFindOptions(query)
       .loadRelationCountAndMap("role.permissionsCount", "role.permissions")
+      .loadRelationCountAndMap("role.userCount", "role.users")
+      .loadRelationCountAndMap("role.inviteCount", "role.invites")
+
       .getMany();
     res.json({
       count,
@@ -83,12 +88,37 @@ router.delete(
   "/:role_id",
   wrapHandler(async (req, res) => {
     req.user;
-
-    const data = await RoleRepository.delete({
-      id: req.params.role_id,
+    const user = await UserRepository.findOne({
+      where: { role_id: req.params.role_id },
+    });
+    const invite = await InviteRepository.findOne({
+      where: { role_id: req.params.role_id },
     });
 
-    res.json(data);
+    if (user || invite) {
+      throw new MedusaError(
+        MedusaError.Types.UNEXPECTED_STATE,
+        "Only when user not assign to this role can be deleted"
+      );
+    }
+    const manager: EntityManager = req.scope.resolve("manager");
+    await manager.transaction(async (transactionManager) => {
+      const roleRepo = transactionManager.withRepository(RoleRepository);
+
+      const role = await roleRepo.findOne({
+        where: { id: req.params.role_id },
+        relations: { permissions: true },
+      });
+      role.permissions = [];
+
+      await roleRepo.save(role);
+
+      await roleRepo.delete({
+        id: req.params.role_id,
+      });
+    });
+
+    res.sendStatus(200);
   })
 );
 

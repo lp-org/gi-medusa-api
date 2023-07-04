@@ -16,6 +16,7 @@ import { generateEntityId } from "@medusajs/medusa/dist/utils";
 import { Permission } from "./Permission";
 import { User } from "./User";
 import { Store } from "./Store";
+import { Invite } from "./Invite";
 
 @Entity()
 export class Role extends BaseEntity {
@@ -43,6 +44,10 @@ export class Role extends BaseEntity {
   @OneToMany(() => User, (user) => user.teamRole)
   @JoinColumn({ name: "id", referencedColumnName: "role_id" })
   users: User[];
+
+  @OneToMany(() => Invite, (invite) => invite.teamRole)
+  @JoinColumn({ name: "id", referencedColumnName: "role_id" })
+  invites: Invite[];
 
   @ManyToOne(() => Store, (store) => store.roles)
   @JoinColumn({ name: "store_id" })
