@@ -34,6 +34,9 @@ export class StoreContent extends BaseEntity {
   @Column({ type: "varchar", nullable: true })
   logo: string;
 
+  @Column({ type: "varchar", nullable: true })
+  favicon: string;
+
   @Column({ type: "jsonb", nullable: true })
   slider: SliderType[];
 

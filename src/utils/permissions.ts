@@ -9,16 +9,30 @@ export const permissionList = [
   },
   {
     name: "products.add",
-    label: "Add",
+    label: "Add, Edit, Delete",
     endpoints: [
       { path: "/products", method: "POST" },
-      { path: "/products/.+", method: "PUT" },
+      { path: "/products/.+", method: "POST" },
+      { path: "/products/.+", method: "DELETE" },
     ],
   },
   {
     name: "products.manage",
-    label: "Manege product (edit, delete, unpublish...)",
-    endpoints: [],
+    label: "Manege product (variants, options)",
+    endpoints: [
+      {
+        path: "products/.+/variants",
+        method: "POST",
+      },
+      {
+        path: "products/.+/variants/.+",
+        method: "POST",
+      },
+      {
+        path: "products/.+/options$",
+        method: "POST",
+      },
+    ],
   },
   {
     name: "orders.view",
@@ -30,20 +44,32 @@ export const permissionList = [
   },
   {
     name: "orders.manage-order",
-    label: "Manage order",
-    endpoints: [],
+    label:
+      "Manage order (completing, canceling, archiving, claims, exchange, return and fulfillment)",
+    endpoints: [
+      { path: "/orders/.+/cancel$", method: "POST" },
+      { path: "/orders/.+/archive$", method: "POST" },
+      { path: "/orders/.+/complete$", method: "POST" },
+      { path: "/orders/.+/fulfillment$", method: "POST" },
+      { path: "/orders/.+/claims$", method: "POST" },
+      { path: "/orders/.+/return$", method: "POST" },
+      { path: "/orders/.+/swaps$", method: "POST" },
+    ],
   },
   {
     name: "orders.manage-payment",
-    label: "Manage payment",
-    endpoints: [],
+    label: "Manage payment (capturing and refunding)",
+    endpoints: [
+      { path: "/orders/.+/refund$", method: "POST" },
+      { path: "/orders/.+/capture$", method: "POST" },
+    ],
   },
   {
     name: "customers.view",
     label: "View",
     endpoints: [
-      { path: "/customers", method: "POST" },
-      { path: "/customers/.+", method: "PUT" },
+      { path: "/customers", method: "GET" },
+      { path: "/customers/.+", method: "GET" },
     ],
   },
   {
@@ -97,10 +123,18 @@ export const permissionList = [
   {
     name: "setting.reigons",
     label: "Reigons",
+    endpoints: [
+      // { path: "/regions", method: "GET" },
+      // { path: "/regions/.+", method: "GET" },
+    ],
   },
   {
     name: "setting.currencies",
     label: "Currencies",
+    endpoints: [
+      { path: "/currencies", method: "POST" },
+      { path: "/currencies/.+", method: "POST" },
+    ],
   },
   {
     name: "setting.store-details",
@@ -109,29 +143,55 @@ export const permissionList = [
   {
     name: "setting.return-reasons",
     label: "Return reasons",
+    endpoints: [
+      { path: "/return-reasons", method: "GET" },
+      { path: "/return-reasons", method: "POST" },
+    ],
   },
   {
     name: "setting.the-team",
     label: "The team",
+    endpoints: [
+      { path: "/invites", method: "POST" },
+      { path: "/invites/.+", method: "DELETE" },
+      // { path: "/users", method: "GET" },
+      // { path: "/users/.+", method: "GET" },
+    ],
   },
   {
     name: "setting.roles",
     label: "Roles",
+    endpoints: [
+      { path: "/roles", method: "GET" },
+      { path: "/roles/.+", method: "GET" },
+      { path: "/roles", method: "POST" },
+      { path: "/roles/.+", method: "PUT" },
+    ],
   },
-  {
-    name: "setting.personal-information",
-    label: "Personal information",
-  },
+
   {
     name: "setting.tax",
     label: "Tax",
+    endpoints: [
+      { path: "/regions/taxes", method: "GET" },
+      // { path: "/regions/.+", method: "GET" },
+    ],
   },
   {
     name: "setting.sales-channels",
     label: "Sales channels",
+    endpoints: [
+      { path: "/sales-channels", method: "GET" },
+      { path: "/sales-channels/.+", method: "GET" },
+      { path: "/sales-channels", method: "POST" },
+    ],
   },
   {
     name: "setting.api-key-management",
     label: "API Key management",
+    endpoints: [
+      { path: "/publishable-api-keys", method: "GET" },
+      { path: "/publishable-api-keys", method: "POST" },
+    ],
   },
 ];

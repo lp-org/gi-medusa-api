@@ -22,15 +22,7 @@ export class Role1686809962528 implements MigrationInterface {
     await queryRunner.query(
       `CREATE INDEX "IDX_bfbc9e263d4cea6d7a8c9eb3ad" ON "role_permissions_permission" ("permission_id") `
     );
-    await queryRunner.query(
-      `CREATE TABLE "permission_roles_role" ("permission_id" character varying NOT NULL, "role_id" character varying NOT NULL, CONSTRAINT "PK_534958b0063b8ad39335d7bcfd0" PRIMARY KEY ("permission_id", "role_id"))`
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_9f44b6228b173c7b9dfb8c6600" ON "permission_roles_role" ("permission_id") `
-    );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_7ec93d4fbf75b063f3ffd2646a" ON "permission_roles_role" ("role_id") `
-    );
+
     await queryRunner.query(
       `ALTER TABLE "user" ADD "role_id" character varying`
     );
@@ -46,21 +38,9 @@ export class Role1686809962528 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "role_permissions_permission" ADD CONSTRAINT "FK_bfbc9e263d4cea6d7a8c9eb3ad2" FOREIGN KEY ("permission_id") REFERENCES "permission"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`
     );
-    await queryRunner.query(
-      `ALTER TABLE "permission_roles_role" ADD CONSTRAINT "FK_9f44b6228b173c7b9dfb8c66003" FOREIGN KEY ("permission_id") REFERENCES "permission"("id") ON DELETE CASCADE ON UPDATE CASCADE`
-    );
-    await queryRunner.query(
-      `ALTER TABLE "permission_roles_role" ADD CONSTRAINT "FK_7ec93d4fbf75b063f3ffd2646a5" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `ALTER TABLE "permission_roles_role" DROP CONSTRAINT "FK_7ec93d4fbf75b063f3ffd2646a5"`
-    );
-    await queryRunner.query(
-      `ALTER TABLE "permission_roles_role" DROP CONSTRAINT "FK_9f44b6228b173c7b9dfb8c66003"`
-    );
     await queryRunner.query(
       `ALTER TABLE "role_permissions_permission" DROP CONSTRAINT "FK_bfbc9e263d4cea6d7a8c9eb3ad2"`
     );
@@ -80,7 +60,7 @@ export class Role1686809962528 implements MigrationInterface {
     await queryRunner.query(
       `DROP INDEX "public"."IDX_9f44b6228b173c7b9dfb8c6600"`
     );
-    await queryRunner.query(`DROP TABLE "permission_roles_role"`);
+
     await queryRunner.query(
       `DROP INDEX "public"."IDX_bfbc9e263d4cea6d7a8c9eb3ad"`
     );

@@ -37,7 +37,6 @@ router.get(
 router.post(
   "/",
   wrapHandler(async (req, res) => {
-    console.log(req.body);
     const validated = await validator(AdminPostInvitesReq, req.body);
 
     const inviteService: InviteService = req.scope.resolve("inviteService");

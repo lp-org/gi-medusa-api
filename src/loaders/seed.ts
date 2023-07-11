@@ -37,13 +37,13 @@ export default async (
     }
   }
 
-  const users = await userRepo.find({ order: { created_at: "asc" } });
-  if (users) {
-    const superadmin = users[0];
-    if (superadmin) {
-      superadmin.metadata = setMetadata(superadmin, { superadmin: true });
-      await userRepo.save(superadmin);
-    }
-  }
+  // const users = await userRepo.find({ order: { created_at: "asc" } });
+  // if (users) {
+  //   const superadmin = users[0];
+  //   if (superadmin) {
+  //     superadmin.metadata = setMetadata(superadmin, { superadmin: true });
+  //     await userRepo.save(superadmin);
+  //   }
+  // }
   console.info("Ending loader...");
 };

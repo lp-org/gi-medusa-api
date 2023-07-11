@@ -6,6 +6,7 @@ import userRouter from "./user";
 import authRouter from "./auth";
 import storeContentRouter from "./store-content";
 import pagesRouter from "./pages";
+import summaryRouter from "./summary";
 import errorHandler from "@medusajs/medusa/dist/api/middlewares/error-handler";
 import { permissions } from "../../middlewares/permissions";
 
@@ -30,5 +31,7 @@ export function attachAdminRoutes(storeRouter: Router) {
 
   storeRouter.use("/store-content", storeContentRouter);
   storeRouter.use("/pages", pagesRouter);
+
+  storeRouter.use("/summary", summaryRouter);
   storeRouter.use(errorHandler());
 }

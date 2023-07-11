@@ -8,16 +8,17 @@ import { MedusaError } from "@medusajs/utils";
 export async function permissions(req: Request, res: Response, next) {
   const path = req.path;
   const userService: UserService = req.scope.resolve("userService");
-
   if (req.user?.userId) {
+    // if superuser
+
     const perms = await userService.retrieveUserPermission(req.user.userId);
     const flattenPerms = perms.map((el) => el.name);
-    const inPerm = permissionList.find((el) =>
-      el.endpoints?.some((endpoint) => {
+    const inPerm = permissionList.find((el) => {
+      return el.endpoints?.some((endpoint) => {
         const reg = new RegExp(endpoint.path);
         return reg.test(path) && req.method === endpoint.method;
-      })
-    );
+      });
+    });
 
     if (inPerm) {
       if (flattenPerms.includes(inPerm.name)) {

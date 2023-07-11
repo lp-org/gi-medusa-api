@@ -12,10 +12,6 @@ import {
   // alias the core repository to not cause a naming conflict
   StoreRepository,
 } from "@medusajs/medusa/dist/repositories/store";
-export class AdminPostStoreContentReq {
-  @IsString()
-  name: string;
-}
 
 const router = Router();
 router.get("/", async (req, res) => {

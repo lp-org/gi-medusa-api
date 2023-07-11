@@ -6,6 +6,7 @@ import { isDefined, setMetadata } from "@medusajs/utils";
 import { MedusaError } from "medusa-core-utils";
 import { EntityManager } from "typeorm";
 import { Permission } from "../models/Permission";
+import PermissionRepository from "../repositories/permission";
 // 7 days
 
 export interface UpdateUserWithRoleIdInput
@@ -71,6 +72,11 @@ class UserService extends MedusaUserService {
       const user: User = await this.retrieve(userId, {
         relations: ["teamRole.permissions"],
       });
+      if (user.metadata) {
+        if (user.metadata.superadmin) {
+          return await PermissionRepository.find();
+        }
+      }
       return user.teamRole ? user.teamRole.permissions : [];
     });
   }

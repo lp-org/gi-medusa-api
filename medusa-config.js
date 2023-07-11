@@ -97,7 +97,7 @@ module.exports = {
   plugins,
   modules,
   featureFlags: {
-    // product_categories: true,
+    product_categories: true,
     tax_inclusive_pricing: true,
   },
 };
