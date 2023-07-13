@@ -40,6 +40,9 @@ export class StoreContent extends BaseEntity {
   @Column({ type: "jsonb", nullable: true })
   slider: SliderType[];
 
+  @Column({ type: "jsonb", nullable: true })
+  slider_product: SliderType[];
+
   @BeforeInsert()
   private beforeInsert(): void {
     this.id = generateEntityId(this.id, "sc");
