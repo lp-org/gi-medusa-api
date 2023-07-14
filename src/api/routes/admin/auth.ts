@@ -3,7 +3,7 @@ import UserService from "../../../services/user";
 import { Router } from "express";
 import _ from "lodash";
 import { permissionList } from "../../../utils/permissions";
-import geoip from "geoip-lite";
+
 const router = Router();
 router.delete(
   "/",
@@ -44,21 +44,6 @@ router.get(
 
       const cleanRes = _.omit(result, ["password_hash"]);
       res.status(200).json({ user: cleanRes });
-    } catch (err) {
-      res.sendStatus(400);
-    }
-  })
-);
-
-router.get(
-  "/geoinfo",
-
-  wrapHandler(async (req, res) => {
-    try {
-      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-      console.log(req.headers["x-forwarded-for"], req.socket.remoteAddress);
-      var geo = geoip.lookup(ip);
-      res.status(200).json(geo);
     } catch (err) {
       res.sendStatus(400);
     }
