@@ -3,7 +3,7 @@ import UserService from "../../../services/user";
 import { Router } from "express";
 import _ from "lodash";
 import { permissionList } from "../../../utils/permissions";
-
+import geoip from "geoip-lite";
 const router = Router();
 router.delete(
   "/",
@@ -49,4 +49,20 @@ router.get(
     }
   })
 );
+
+router.get(
+  "/geoinfo",
+
+  wrapHandler(async (req, res) => {
+    try {
+      const ip = req.ip;
+      console.log(ip);
+      var geo = geoip.lookup(ip);
+      res.status(200).json(geo);
+    } catch (err) {
+      res.sendStatus(400);
+    }
+  })
+);
+
 export default router;
