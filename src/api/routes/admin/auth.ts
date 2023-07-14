@@ -55,8 +55,8 @@ router.get(
 
   wrapHandler(async (req, res) => {
     try {
-      const ip = req.ip;
-      console.log(ip);
+      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+      console.log(req.headers["x-forwarded-for"], req.socket.remoteAddress);
       var geo = geoip.lookup(ip);
       res.status(200).json(geo);
     } catch (err) {
