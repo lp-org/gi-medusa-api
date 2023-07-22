@@ -19,6 +19,7 @@
                 <td>
                   <p style="font-size:15px;line-height:2;margin:0;font-weight:bold">Shipping to: {{billing_address.first_name}} {{billing_address.last_name}}</p>
                   <p style="font-size:14px;line-height:2;margin:0;color:#747474;font-weight:500">{{billing_address.address_1}}, {{billing_address.address_2}}, {{billing_address.city}}, {{billing_address.postal_code}} {{billing_address.province}} </p>
+                 <p style="font-size:15px;line-height:2;margin:0;color:#747474;font-weight:bold">{{billing_address.phone}}</p>
                 </td>
               </tr>
             </tbody>
@@ -93,7 +94,7 @@
                   <table width="100%" align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0">
                     <tbody style="width:100%">
                       <tr style="width:100%">
-                        <td align="center"><a target="_blank" style="color:#000;text-decoration:none;border:1px solid #929292;font-size:16px;padding:10px 0px;width:220px;display:block;text-align:center;font-weight:500">Order Status</a></td>
+                        <td align="center"><a target="_blank" href="https://grin-global.com/order/confirmed/{{id}}" style="color:#000;text-decoration:none;border:1px solid #929292;font-size:16px;padding:10px 0px;width:220px;display:block;text-align:center;font-weight:500">View order</a></td>
                       </tr>
                     </tbody>
                   </table>
