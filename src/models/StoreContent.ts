@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   JoinTable,
   ManyToOne,
   OneToMany,
@@ -42,6 +43,10 @@ export class StoreContent extends BaseEntity {
 
   @Column({ type: "jsonb", nullable: true })
   slider_product: SliderType[];
+
+  @OneToOne(() => Store)
+  @JoinColumn({ name: "store_id" })
+  store: Store;
 
   @BeforeInsert()
   private beforeInsert(): void {

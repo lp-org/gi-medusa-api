@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+<html lang="en">
+
+  <head></head>
+  <div id="__react-email-preview" style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">Get your order summary, #{{display_id}}
+  </div>
+
+  <body style="background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,sans-serif">
+    <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:37.5em;margin:10px auto;width:600px;border:1px solid #E5E5E5">
+      <tr style="width:100%">
+        <td>
+          <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E5E5E5;margin:0" />
+          {{>header title="Your order has been placed"}}
+          <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E5E5E5;margin:0" />
+          <table style="padding-left:40px;padding-right:40px;padding-top:22px;padding-bottom:22px" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+            <tbody>
+              <tr>
+                <td>
+                  <p style="font-size:15px;line-height:2;margin:0;font-weight:bold">Shipping to: {{billing_address.first_name}} {{billing_address.last_name}}</p>
+                  <p style="font-size:14px;line-height:2;margin:0;color:#747474;font-weight:500">{{billing_address.address_1}}, {{billing_address.address_2}}, {{billing_address.city}}, {{billing_address.postal_code}} {{billing_address.province}} </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E5E5E5;margin:0" />
+          
+          <table style="padding-left:40px;padding-right:40px;padding-top:40px;padding-bottom:40px" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+            <tbody>
+              <tr>
+                <td>
+                 {{#each items}}
+                  <table width="100%" align="left" role="presentation" cellSpacing="0" cellPadding="0" border="0" style="margin-bottom: 8px;">
+                    <tbody style="width:100%">
+                      <tr style="width:100%">
+                        <td><img alt="{{this.title}}" src="{{this.thumbnail}}"  width="140px" style="display:block;outline:none;border:none;text-decoration:none;float:left" /></td>
+                        <td style="vertical-align:top;padding-left:12px">
+                          <p style="font-size:14px;line-height:2;margin:0;font-weight:500">{{this.title}}</p>
+                          <p style="font-size:14px;line-height:2;margin:0;color:#747474;font-weight:500">{{variant.title}}</p>
+                        </td>
+                        <td style="vertical-align:top;">x {{this.quantity}}</td>
+                        <td style="vertical-align:top;padding-left:12px; text-align: right;">{{this.subtotal}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                 {{/each}}
+                 <table width="100%" align="right" role="presentation" cellSpacing="0" cellPadding="0" border="0" >
+                     <tr style="width:100%; text-align: right;padding-bottom:8px">
+                        <td>Shipping</td>
+                        <td>{{shipping_total}}</td>
+                     </tr>
+                      <tr style="width:100%; text-align: right;padding-bottom:8px">
+                         <td>Tax</td>
+                        <td> {{tax_total}}</td>
+                     </tr>
+                      <tr style="width:100%; text-align: right;padding-bottom:8px">
+                         <td>Total</td>
+                        <td style="font-weight: 700;"> {{total}}</td>
+                     </tr>
+                  
+                
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    
+          <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E5E5E5;margin:0" />
+          <table style="padding-left:40px;padding-right:40px;padding-top:22px;padding-bottom:22px" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
+            <tbody>
+              <tr>
+                <td>
+                  <table width="100%" style="display:inline-flex;margin-bottom:40px" align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0">
+                    <tbody style="width:100%">
+                      <tr style="width:100%">
+                        <td style="width:170px">
+                          <p style="font-size:14px;line-height:2;margin:0;font-weight:bold">Order Number</p>
+                          <p style="font-size:14px;line-height:1.4;margin:12px 0 0 0;font-weight:500;color:#6F6F6F">#{{display_id}}</p>
+                        </td>
+                        <td>
+                          <p style="font-size:14px;line-height:2;margin:0;font-weight:bold">Order Date</p>
+                          <p style="font-size:14px;line-height:1.4;margin:12px 0 0 0;font-weight:500;color:#6F6F6F">{{date}}</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <table width="100%" align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0">
+                    <tbody style="width:100%">
+                      <tr style="width:100%">
+                        <td align="center"><a target="_blank" style="color:#000;text-decoration:none;border:1px solid #929292;font-size:16px;padding:10px 0px;width:220px;display:block;text-align:center;font-weight:500">Order Status</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E5E5E5;margin:0" />
+          
+         
+         {{> footer}}
+        </td>
+      </tr>
+    </table>
+  </body>
+
+</html>
