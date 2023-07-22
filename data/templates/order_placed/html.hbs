@@ -49,7 +49,13 @@
                         <td>Shipping</td>
                         <td>{{shipping_total}}</td>
                      </tr>
-                      <tr style="width:100%; text-align: right;padding-bottom:8px">
+                     {{#if has_discounts}}
+                     <tr style="width:100%; text-align: right;padding-bottom:8px; color:#ef4444">
+                        <td>Discount</td>
+                        <td>-{{discount_total}}</td>
+                     </tr>
+                     {{/if}}
+                     <tr style="width:100%; text-align: right;padding-bottom:8px">
                          <td>Tax</td>
                         <td> {{tax_total}}</td>
                      </tr>
