@@ -35,6 +35,25 @@ export const permissionList = [
     ],
   },
   {
+    name: "categories.view",
+    label: "View",
+    endpoints: [
+      {
+        path: "/product-categories",
+        method: "GET",
+      },
+    ],
+  },
+  {
+    name: "categories.add",
+    label: "Add, Edit, Delete",
+    endpoints: [
+      { path: "/product-categories", method: "POST" },
+      { path: "/product-categories/.+", method: "POST" },
+      { path: "/product-categories/.+", method: "DELETE" },
+    ],
+  },
+  {
     name: "orders.view",
     label: "View",
     endpoints: [
@@ -118,6 +137,25 @@ export const permissionList = [
     endpoints: [
       { path: "/gift-cards", method: "GET" },
       { path: "/gift-cards/.+", method: "GET" },
+    ],
+  },
+  {
+    name: "pages.view",
+    label: "View",
+    endpoints: [
+      {
+        path: "/pages",
+        method: "GET",
+      },
+    ],
+  },
+  {
+    name: "pages.add",
+    label: "Add, Edit, Delete",
+    endpoints: [
+      { path: "/pages", method: "POST" },
+      { path: "/pages/.+", method: "POST" },
+      { path: "/pages/.+", method: "DELETE" },
     ],
   },
   {
