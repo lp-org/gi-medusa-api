@@ -26,7 +26,7 @@ jobs:
         uses: burnett01/rsync-deployments@6.0.0
         with:
           switches: -avz --delete --exclude=".env" --exclude="uploads"
-          remote_path: /home/ec2-user/medusa-api
+          remote_path: /home/ec2-user/gi-medusa-api
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_user: ${{ secrets.SERVER_USERNAME }}
           remote_key: ${{ secrets.SERVER_PRIVATE_KEY }}
