@@ -5,7 +5,7 @@ import {
   FindPaginationParams,
 } from "@medusajs/medusa";
 
-import { IsString, IsBoolean, IsOptional } from "class-validator";
+import { IsString, IsBoolean, IsOptional, IsNumber } from "class-validator";
 import { validator } from "@medusajs/medusa/dist/utils/validator";
 import { buildQuery } from "@medusajs/medusa";
 import PageRepository from "../../../repositories/page";
@@ -46,6 +46,12 @@ export class AdminPostPageReq {
   @IsBoolean()
   @IsOptional()
   publish: boolean;
+  @IsBoolean()
+  @IsOptional()
+  customize: boolean;
+  @IsNumber()
+  @IsOptional()
+  rank: number;
 }
 
 router.post(

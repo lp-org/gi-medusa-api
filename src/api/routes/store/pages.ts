@@ -10,8 +10,13 @@ const router = Router();
 router.get(
   "/:handle",
   wrapHandler(async (req, res) => {
+    const customize = req.query.customize;
     const data = await PageRepository.findOne({
-      where: { handle: req.params.handle, publish: true },
+      where: {
+        handle: req.params.handle,
+        publish: true,
+        customize: customize == "1" ? true : false,
+      },
     });
     if (!data) {
       throw new MedusaError(MedusaError.Types.NOT_FOUND, "Page not found");

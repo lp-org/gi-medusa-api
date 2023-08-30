@@ -6,6 +6,7 @@ import { EntityManager } from "typeorm";
 import { permissionList } from "../utils/permissions";
 import UserRepository from "../repositories/user";
 import { setMetadata } from "@medusajs/utils";
+import PageCustomizeKeyRepository from "../repositories/pageCustomizeKey";
 
 export default async (
   container: AwilixContainer,
@@ -45,5 +46,22 @@ export default async (
   //     await userRepo.save(superadmin);
   //   }
   // }
+
+  // PageCustomizeKey
+
+  const pageCustomizeKeyData = [
+    "custom_terms",
+    "custom_privacy_policy",
+    "custom_refund_policy",
+    "custom_delivery_policy",
+  ];
+  const customizeKey = await PageCustomizeKeyRepository.find();
+
+  if (!customizeKey.length) {
+    const data = PageCustomizeKeyRepository.create(
+      pageCustomizeKeyData.map((el) => ({ key: el }))
+    );
+    await PageCustomizeKeyRepository.save(data);
+  }
   console.info("Ending loader...");
 };

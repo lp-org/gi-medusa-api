@@ -18,6 +18,12 @@ export class Page extends BaseEntity {
   @Column({ type: "boolean" })
   publish: boolean;
 
+  @Column({ type: "boolean" })
+  customize: boolean;
+
+  @Column({ type: "integer" })
+  rank: number;
+
   @BeforeInsert()
   private beforeInsert(): void {
     this.id = generateEntityId(this.id, "page");

@@ -10,7 +10,16 @@ router.get("/", async (req, res) => {
   const store = await StoreRepository.find();
   const name = store[0].name;
   const data = await StoreContentRepository.find();
-  const pages = await PageRepository.find({ where: { publish: true } });
+  const pages = await PageRepository.find({
+    select: {
+      id: true,
+      title: true,
+    },
+    where: { publish: true, customize: false },
+    order: {
+      rank: "ASC",
+    },
+  });
   res.json({ name, ...data[0], pages });
 });
 
