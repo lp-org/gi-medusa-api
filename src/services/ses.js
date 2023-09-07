@@ -291,7 +291,9 @@ class SESService extends NotificationService {
       ` <table style="padding:40px 74px;text-align:center" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
       <tbody>
         <tr>
-          <td><img alt="${storeContent.store.name}" src="${storeContent.logo}" width="80"  style="display:block;outline:none;border:none;text-decoration:none;margin:auto" />
+          <td><img alt="${storeContent.store.name}" src="${encodeURIComponent(
+        storeContent.logo
+      )}" width="80"  style="display:block;outline:none;border:none;text-decoration:none;margin:auto" />
             <h1 style="font-size:32px;line-height:1.3;font-weight:700;text-align:center;letter-spacing:-1px">{{ title }}</h1>
             <p style="font-size:14px;line-height:2;margin:0;color:#747474;font-weight:500"></p>
           </td>
