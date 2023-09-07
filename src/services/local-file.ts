@@ -1,14 +1,12 @@
-import {
-  AbstractFileService,
-  FileServiceGetUploadStreamResult,
-  FileServiceUploadResult,
-  IFileService,
-  GetUploadedFileType,
+import { AbstractFileService } from "@medusajs/medusa";
+
+import type {
   UploadStreamDescriptorType,
+  FileServiceGetUploadStreamResult,
   DeleteFileType,
-  ConfigModule,
-  TransactionBaseService,
-} from "@medusajs/medusa";
+  GetUploadedFileType,
+  FileServiceUploadResult,
+} from "@medusajs/types";
 import fs from "fs";
 import fsp from "fs/promises";
 import stream from "stream";

@@ -118,7 +118,7 @@ class SESService extends NotificationService {
     }
 
     const data = await this.fetchData(event, eventData, attachmentGenerator);
-
+    // console.log(data);
     if (!data) {
       throw new MedusaError(
         MedusaError.Types.INVALID_DATA,
@@ -253,7 +253,6 @@ class SESService extends NotificationService {
     if (this.options_.enable_endpoint !== "42") {
       return false;
     }
-
     try {
       const { subject, html, text } = await this.compileTemplate(
         template_id,
