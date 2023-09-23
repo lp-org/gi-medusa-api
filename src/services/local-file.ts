@@ -44,7 +44,7 @@ class LocalFileService extends AbstractFileService {
     const parsedFilename = path.parse(file.originalname);
 
     const fileKey = this.buildFileKey(
-      `${parsedFilename.name}-${Date.now()}`,
+      `${parsedFilename.name.replace(/\s+/g, "_")}-${Date.now()}`,
       parsedFilename.ext
     );
 

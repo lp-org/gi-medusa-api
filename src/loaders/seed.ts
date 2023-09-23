@@ -1,4 +1,8 @@
-import { ProductService } from "@medusajs/medusa";
+import {
+  FulfillmentProviderService,
+  ProductService,
+  RegionService,
+} from "@medusajs/medusa";
 import { AwilixContainer } from "awilix";
 import PermissionRepository from "./../repositories/permission";
 import { EntityManager } from "typeorm";
@@ -7,6 +11,7 @@ import { permissionList } from "../utils/permissions";
 import UserRepository from "../repositories/user";
 import { setMetadata } from "@medusajs/utils";
 import PageCustomizeKeyRepository from "../repositories/pageCustomizeKey";
+import WeightFulfillmentRepository from "../repositories/WeightFulfillment";
 
 export default async (
   container: AwilixContainer,
@@ -63,5 +68,28 @@ export default async (
     );
     await PageCustomizeKeyRepository.save(data);
   }
+  const fulfilmentProviderService: FulfillmentProviderService =
+    container.resolve("fulfillmentProviderService");
+  await fulfilmentProviderService.registerInstalledProviders(["weight"]);
+  const regionService: RegionService = container.resolve("regionService");
+  const allRegions = await regionService.list();
+  allRegions.forEach(async (el) => {
+    await regionService.addFulfillmentProvider(el.id, "weight");
+  });
+
+  // Weight fulfillment
+  const weightFulfillmentExist = await WeightFulfillmentRepository.exist();
+  if (!weightFulfillmentExist) {
+    const weightFulfillmentData = WeightFulfillmentRepository.create({
+      id: "weight-fulfillment",
+      name: "Weight fulfillment (Default)",
+      initial_price: 2000,
+      initial_weight: 2000,
+      additional_price: 100,
+      every_additional_weight: 1000,
+    });
+    await WeightFulfillmentRepository.save(weightFulfillmentData);
+  }
+
   console.info("Ending loader...");
 };
