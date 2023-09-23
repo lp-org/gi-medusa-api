@@ -11,7 +11,7 @@ import { permissionList } from "../utils/permissions";
 import UserRepository from "../repositories/user";
 import { setMetadata } from "@medusajs/utils";
 import PageCustomizeKeyRepository from "../repositories/pageCustomizeKey";
-import WeightFulfillmentRepository from "../repositories/WeightFulfillment";
+import WeightFulfillmentRepository from "../repositories/weightFulfillment";
 
 export default async (
   container: AwilixContainer,

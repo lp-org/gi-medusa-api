@@ -7,7 +7,7 @@ import {
   ShippingOptionService,
 } from "@medusajs/medusa";
 import { CreateReturnType } from "@medusajs/medusa/dist/types/fulfillment-provider";
-import WeightFulfillmentRepository from "../repositories/WeightFulfillment";
+import WeightFulfillmentRepository from "../repositories/weightFulfillment";
 type InjectedDependencies = {
   shippingOptionService: ShippingOptionService;
 };
