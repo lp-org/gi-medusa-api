@@ -78,7 +78,7 @@ class WeightFulfillmentService extends AbstractFulfillmentService {
     order: Order,
     fulfillment: Fulfillment
   ): Promise<Record<string, unknown>> {
-    throw new Error("Method not implemented.");
+    return {};
   }
   async cancelFulfillment(fulfillment: { [x: string]: unknown }): Promise<any> {
     throw new Error("Method not implemented.");

@@ -83,7 +83,7 @@ export default async (
     const weightFulfillmentData = WeightFulfillmentRepository.create({
       id: "weight-fulfillment",
       name: "Weight fulfillment (Default)",
-      initial_price: 2000,
+      initial_price: 700,
       initial_weight: 2000,
       additional_price: 100,
       every_additional_weight: 1000,
