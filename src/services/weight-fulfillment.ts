@@ -39,7 +39,21 @@ class WeightFulfillmentService extends AbstractFulfillmentService {
     if (optionData.id !== "weight-fulfillment") {
       throw new Error("invalid data");
     }
-    return { ...data, custom: "123" };
+    const {
+      totalWeight,
+      initial_price,
+      initial_weight,
+      additional_price,
+      every_additional_weight,
+    } = await this.calculateWeight(cart, optionData.id);
+    return {
+      ...data,
+      total_weight: totalWeight + "g",
+      initial_price,
+      initial_weight,
+      additional_price,
+      every_additional_weight,
+    };
   }
   async validateOption(data: { [x: string]: unknown }): Promise<boolean> {
     return true;
@@ -54,12 +68,13 @@ class WeightFulfillmentService extends AbstractFulfillmentService {
   ): Promise<number> {
     //RM 7 for 2kg and below, add RM 1 for every additional 1kg
     const id = optionData.id as string;
-    const totalWeight = cart.items.reduce((prev, curr) => {
-      return prev + (curr.variant.weight || 0) * curr.quantity;
-    }, 0);
-    const metadata = await WeightFulfillmentRepository.findOne({
-      where: { id },
-    });
+    // const totalWeight = cart.items.reduce((prev, curr) => {
+    //   return prev + (curr.variant.weight || 0) * curr.quantity;
+    // }, 0);
+    // const metadata = await WeightFulfillmentRepository.findOne({
+    //   where: { id },
+    // });
+    const { totalWeight, ...metadata } = await this.calculateWeight(cart, id);
     let initial_price = metadata.initial_price;
     const initial_weight = metadata.initial_weight;
     const additional_price = metadata.additional_price;
@@ -102,6 +117,16 @@ class WeightFulfillmentService extends AbstractFulfillmentService {
     documentType: "invoice" | "label"
   ): Promise<any> {
     throw new Error("Method not implemented.");
+  }
+
+  private async calculateWeight(carts: Cart, id: string) {
+    const totalWeight = carts.items.reduce((prev, curr) => {
+      return prev + (curr.variant.weight || 0) * curr.quantity;
+    }, 0);
+    const metadata = await WeightFulfillmentRepository.findOne({
+      where: { id },
+    });
+    return { totalWeight, ...metadata };
   }
 }
 
