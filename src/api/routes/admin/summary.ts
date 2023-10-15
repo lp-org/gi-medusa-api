@@ -123,12 +123,12 @@ router.get(
         const q = lineItemRepository
           .createQueryBuilder("lineItem")
           .leftJoinAndSelect("lineItem.order", "order")
-          .where("lineItem.variant_id IN (:...variant_id)", {
+          .andWhere("variant_id IN (:...variant_id)", {
             // @ts-ignore
             variant_id: variant_id.split(","),
           })
-          .where("order.currency_code = :currency_code", { currency_code })
-          .where("order.sales_channel_id = :sales_channel_id", {
+          .andWhere("order.currency_code = :currency_code", { currency_code })
+          .andWhere("order.sales_channel_id = :sales_channel_id", {
             sales_channel_id,
           })
           .andWhere("order_id is NOT NULL")
