@@ -52,6 +52,7 @@ class SESService extends NotificationService {
       productVariantService,
       storeContentService,
       productCollectionService,
+      orderEditService,
     },
     options
   ) {
@@ -65,8 +66,11 @@ class SESService extends NotificationService {
       enable_endpoint: process.env.SES_ENABLE_ENDPOINT,
       template_path: process.env.SES_TEMPLATE_PATH,
       order_placed_template: "order_placed",
+      order_edit_confirmed_template: "order_edit_confirmed",
       order_shipped_template: "order_shipped",
       user_password_reset_template: "user_password_reset",
+      customer_password_reset_template: "customer_password_reset",
+      customer_created_template: "customer_created",
       gift_card_created_template: "gift_card_created",
       //order_canceled_template: 'order_canceled',
       //order_refund_created_template: 'order_refund_created',
@@ -95,6 +99,7 @@ class SESService extends NotificationService {
     this.productVariantService_ = productVariantService;
     this.storeContentService_ = storeContentService;
     this.productCollectionService_ = productCollectionService;
+    this.orderEditService_ = orderEditService;
     const ses = new aws.SES({
       region: this.options_.region,
       credentials: {
@@ -314,8 +319,8 @@ class SESService extends NotificationService {
             <table width="100%" style="padding-top:22px;padding-bottom:22px;padding-left:20px;padding-right:20px" align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0">
               <tbody style="width:100%">
                 <tr style="width:100%">
-                  <td colSpan="1" style="width:33%"><a target="_blank" style="color:#000;text-decoration:none;font-size:13.5px;margin-top:0;font-weight:500" href="https://grin-global.com">Home</a></td>
-                  <td colSpan="1" style="width:33%"><a target="_blank" style="color:#000;text-decoration:none;font-size:13.5px;margin-top:0;font-weight:500" href="https://grin-global.com/store">Store</a></td>
+                  <td colSpan="1" style="width:33%"><a target="_blank" style="color:#000;text-decoration:none;font-size:13.5px;margin-top:0;font-weight:500" href="https://gitechnano.com">Home</a></td>
+                  <td colSpan="1" style="width:33%"><a target="_blank" style="color:#000;text-decoration:none;font-size:13.5px;margin-top:0;font-weight:500" href="https://gitechnano.com/store">Store</a></td>
         
                 </tr>
               </tbody>
@@ -360,7 +365,7 @@ class SESService extends NotificationService {
                 <tr style="width:100%">
                  ${collections.map(
                    (el) =>
-                     `<td align="center"><a target="_blank" style="color:#000;text-decoration:none;font-weight:500" href="https://grin-global.com/collections${el.id}">${el.title}</a></td>`
+                     `<td align="center"><a target="_blank" style="color:#000;text-decoration:none;font-weight:500" href="https://gitechnano.com/collections${el.id}">${el.title}</a></td>`
                  )}                
                  
                 </tr>
@@ -461,6 +466,8 @@ class SESService extends NotificationService {
           return map.gift_card_created_template;
         case "order.placed":
           return map.order_placed_template;
+        case "order-edit.confirmed":
+          return map.order_edit_confirmed_template;
         case "order.shipment_created":
           return map.order_shipped_template;
         case "order.canceled":
@@ -469,6 +476,8 @@ class SESService extends NotificationService {
           return map.user_password_reset_template;
         case "customer.password_reset":
           return map.customer_password_reset_template;
+        case "customer.created":
+          return map.customer_created_template;
         case "restock-notification.restocked":
           return map.medusa_restock_template;
         case "order.refund_created":
@@ -500,6 +509,8 @@ class SESService extends NotificationService {
         return this.options_.gift_card_created_template;
       case "order.placed":
         return this.options_.order_placed_template;
+      case "order-edit.confirmed":
+        return this.options_.order_edit_confirmed_template;
       case "order.shipment_created":
         return this.options_.order_shipped_template;
       case "order.canceled":
@@ -508,6 +519,8 @@ class SESService extends NotificationService {
         return this.options_.user_password_reset_template;
       case "customer.password_reset":
         return this.options_.customer_password_reset_template;
+      case "customer.created":
+        return this.options_.customer_created_template;
       case "restock-notification.restocked":
         return this.options_.medusa_restock_template;
       case "order.refund_created":
@@ -586,8 +599,12 @@ class SESService extends NotificationService {
         return this.orderCanceledData(eventData, attachmentGenerator);
       case "user.password_reset":
         return this.userPasswordResetData(eventData, attachmentGenerator);
+      case "order-edit.confirmed":
+        return this.orderEditConfirmedData(eventData, attachmentGenerator);
       case "customer.password_reset":
         return this.customerPasswordResetData(eventData, attachmentGenerator);
+      case "customer.created":
+        return this.customerDetails(eventData, attachmentGenerator);
       case "restock-notification.restocked":
         return await this.restockNotificationData(
           eventData,
@@ -1456,8 +1473,23 @@ class SESService extends NotificationService {
     return data;
   }
 
-  customerPasswordResetData(data) {
+  async orderEditConfirmedData(data) {
+    const id = data.id;
+    const orderEdit = await this.orderEditService_.retrieve(id);
+    return await this.orderPlacedData({ id: orderEdit.order_id });
+  }
+
+  customerDetails(data) {
     return data;
+  }
+
+  customerPasswordResetData(data) {
+    let url =
+      process.env.NODE_ENV === "production"
+        ? "https://gitechnano.com/account/reset-password"
+        : "http://localhost:8000/account/reset-password";
+    url = url + `?email=${data.email}&token=${data.token}`;
+    return { ...data, url };
   }
 
   async orderRefundCreatedData({ id, refund_id }) {

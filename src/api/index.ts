@@ -5,7 +5,25 @@ import { authenticate, ConfigModule } from "@medusajs/medusa";
 import { getConfigFile } from "medusa-core-utils";
 import { attachStoreRoutes } from "./routes/store";
 import { attachAdminRoutes } from "./routes/admin";
+import { registerOverriddenValidators } from "@medusajs/medusa";
+import { AdminPostProductsReq as MedusaAdminPostProductsReq } from "@medusajs/medusa/dist/api/routes/admin/products/create-product";
+import { AdminPostProductsProductReq as MedusaAdminPostProductsProductReq } from "@medusajs/medusa/dist/api/routes/admin/products/update-product";
+import { IsString, IsOptional } from "class-validator";
 
+class AdminPostProductsReq extends MedusaAdminPostProductsReq {
+  @IsString()
+  @IsOptional()
+  description_2: string;
+}
+
+class AdminPostProductsProductReq extends MedusaAdminPostProductsProductReq {
+  @IsString()
+  @IsOptional()
+  description_2: string;
+}
+
+registerOverriddenValidators(AdminPostProductsReq);
+registerOverriddenValidators(AdminPostProductsProductReq);
 export default (rootDirectory: string): Router | Router[] => {
   // Read currently-loaded medusa config
   const { configModule } = getConfigFile<ConfigModule>(

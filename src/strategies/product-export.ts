@@ -34,8 +34,8 @@ export default class ProductExportStrategy extends AbstractBatchJobStrategy {
   public static identifier = "product-export-strategy";
   public static batchType = "product-export";
 
-  protected declare manager_: EntityManager;
-  protected declare transactionManager_: EntityManager | undefined;
+  protected static manager_: EntityManager;
+  protected static transactionManager_: EntityManager | undefined;
 
   protected readonly batchJobService_: BatchJobService;
   protected readonly productService_: ProductService;

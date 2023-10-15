@@ -38,6 +38,33 @@ export class StoreContent extends BaseEntity {
   @Column({ type: "varchar", nullable: true })
   favicon: string;
 
+  @Column({ type: "varchar", nullable: true })
+  wording_1: string;
+
+  @Column({ type: "varchar", nullable: true })
+  wording_2: string;
+
+  @Column({ type: "varchar", nullable: true })
+  wording_3: string;
+
+  @Column({ type: "varchar", nullable: true })
+  banner_1: string;
+
+  @Column({ type: "varchar", nullable: true })
+  banner_2: string;
+
+  @Column({ type: "varchar", nullable: true })
+  tiktok: string;
+
+  @Column({ type: "varchar", nullable: true })
+  shopee: string;
+
+  @Column({ type: "varchar", nullable: true })
+  whatapps: string;
+
+  @Column({ type: "varchar", nullable: true })
+  website: string;
+
   @Column({ type: "jsonb", nullable: true })
   slider: SliderType[];
 

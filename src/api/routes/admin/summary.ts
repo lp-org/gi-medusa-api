@@ -1,5 +1,7 @@
 import { Router } from "express";
 import OrderSerivce from "../../../services/order";
+import LineItemService from "@medusajs/medusa/dist/services/line-item";
+import LineItemRepository from "@medusajs/medusa/dist/repositories/line-item";
 import { EntityManager, Between } from "typeorm";
 import { IsInt, IsNumber, IsOptional, IsString } from "class-validator";
 import {
@@ -29,6 +31,10 @@ class SummaryQuery extends FindParams {
   @IsString()
   @IsOptional()
   sales_channel_id?: string;
+
+  @IsString()
+  @IsOptional()
+  variant_id?: string;
 }
 
 type LabelValue = {
@@ -60,8 +66,13 @@ router.get(
      *  else year
      */
 
-    const { currency_code, start_date, end_date, sales_channel_id } =
-      req.filterableFields;
+    const {
+      currency_code,
+      start_date,
+      end_date,
+      sales_channel_id,
+      variant_id,
+    } = req.filterableFields;
 
     const duration = dayjs(end_date as string).diff(
       start_date as string,
@@ -80,7 +91,10 @@ router.get(
 
     const manager: EntityManager = req.scope.resolve("manager");
     const orderService: OrderSerivce = req.scope.resolve("orderService");
-
+    const lineItemService: LineItemService =
+      req.scope.resolve("lineItemService");
+    const lineItemRepository: typeof LineItemRepository =
+      req.scope.resolve("lineItemRepository");
     const data = await manager.transaction(async (transactionManager) => {
       let totalSales = 0;
       let totalAwaiting = 0;
@@ -99,24 +113,88 @@ router.get(
       });
       const salesByMonth = {};
 
-      // Group sales by month
-      for (const sale of orders) {
-        const payment_status = sale.payment_status;
-        if (
-          payment_status === PaymentStatus.CAPTURED ||
-          payment_status === PaymentStatus.REFUNDED ||
-          payment_status === PaymentStatus.PARTIALLY_REFUNDED
-        ) {
-          const date = dayjs(sale.created_at).startOf(interval).toISOString();
-          totalRefunded += sale.refunded_total;
-          totalSales += sale.total;
-          if (!salesByMonth[date]) {
-            salesByMonth[date] = 0;
-          }
+      // line item list
+      if (variant_id) {
+        // const lineItems = await lineItemService.list(
+        //   // @ts-ignore
+        //   { variant_id: variant_id.split(",") },
+        //   { relations: ["order"] }
+        // );
+        const q = lineItemRepository
+          .createQueryBuilder("lineItem")
+          .leftJoinAndSelect("lineItem.order", "order")
+          .where("lineItem.variant_id IN (:...variant_id)", {
+            // @ts-ignore
+            variant_id: variant_id.split(","),
+          })
+          .where("order.currency_code = :currency_code", { currency_code })
+          .where("order.sales_channel_id = :sales_channel_id", {
+            sales_channel_id,
+          })
+          .andWhere("order_id is NOT NULL")
+          //   (created_at: {
+          //   gte: new Date(start_date as string),
+          //   lt: new Date(
+          //     dayjs(end_date as string)
+          //       .add(1, "day")
+          //       .toISOString()
+          //   ),
+          // },
+          .andWhere("order.created_at >= :start_date", {
+            start_date: new Date(start_date as string),
+          })
+          .andWhere("order.created_at < :end_date", {
+            end_date: new Date(
+              dayjs(end_date as string)
+                .add(1, "day")
+                .toISOString()
+            ),
+          });
+        const lineItems = await q.getMany();
 
-          salesByMonth[date] += sale.total;
-        } else if (payment_status === PaymentStatus.AWAITING) {
-          totalAwaiting += sale.total;
+        for (const sale of lineItems) {
+          if (sale.order) {
+            const payment_status = sale.order.payment_status;
+            if (
+              payment_status === PaymentStatus.CAPTURED ||
+              payment_status === PaymentStatus.REFUNDED ||
+              payment_status === PaymentStatus.PARTIALLY_REFUNDED
+            ) {
+              const date = dayjs(sale.created_at)
+                .startOf(interval)
+                .toISOString();
+              totalRefunded += sale.order.refunded_total;
+              totalSales += sale.unit_price * sale.quantity;
+              if (!salesByMonth[date]) {
+                salesByMonth[date] = 0;
+              }
+
+              salesByMonth[date] += sale.unit_price * sale.quantity;
+            } else if (payment_status === PaymentStatus.AWAITING) {
+              totalAwaiting += sale.unit_price * sale.quantity;
+            }
+          }
+        }
+      } else {
+        // Group sales by month
+        for (const sale of orders) {
+          const payment_status = sale.payment_status;
+          if (
+            payment_status === PaymentStatus.CAPTURED ||
+            payment_status === PaymentStatus.REFUNDED ||
+            payment_status === PaymentStatus.PARTIALLY_REFUNDED
+          ) {
+            const date = dayjs(sale.created_at).startOf(interval).toISOString();
+            totalRefunded += sale.refunded_total;
+            totalSales += sale.total;
+            if (!salesByMonth[date]) {
+              salesByMonth[date] = 0;
+            }
+
+            salesByMonth[date] += sale.total;
+          } else if (payment_status === PaymentStatus.AWAITING) {
+            totalAwaiting += sale.total;
+          }
         }
       }
       const result: LabelValue[] = [];
@@ -133,6 +211,7 @@ router.get(
 
       return { result, totalSales, totalRefunded, totalAwaiting };
     });
+
     res.json({ duration, interval, ...data });
   }
 );
