@@ -1,14 +1,11 @@
 import { Column, Entity } from "typeorm";
 import {
   // alias the core entity to not cause a naming conflict
-  Product as MedusaProduct,
+  ProductVariant as MedusaProductVariant,
 } from "@medusajs/medusa";
 import { ProductLowStockCount } from "./ProductLowStock";
 
 @Entity()
-export class Product extends MedusaProduct {
-  @Column()
-  description_2: string;
-
+export class ProductVariant extends MedusaProductVariant {
   lowStockCount: ProductLowStockCount[];
 }

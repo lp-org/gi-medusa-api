@@ -8,6 +8,7 @@ import storeContentRouter from "./store-content";
 import pagesRouter from "./pages";
 import pagesCustomizeKeyRouter from "./pagesCustomizeKey";
 import summaryRouter from "./summary";
+import lowStockRouter from "./low-stock";
 import errorHandler from "@medusajs/medusa/dist/api/middlewares/error-handler";
 import { permissions } from "../../middlewares/permissions";
 
@@ -34,5 +35,6 @@ export function attachAdminRoutes(storeRouter: Router) {
   storeRouter.use("/pages", pagesRouter);
   storeRouter.use("/pagesCustomizeKey", pagesCustomizeKeyRouter);
   storeRouter.use("/summary", summaryRouter);
+  storeRouter.use("/low-stock", lowStockRouter);
   storeRouter.use(errorHandler());
 }
