@@ -1,5 +1,6 @@
 import {
   FulfillmentProviderService,
+  PaymentProviderService,
   ProductService,
   RegionService,
 } from "@medusajs/medusa";
@@ -90,6 +91,14 @@ export default async (
     });
     await WeightFulfillmentRepository.save(weightFulfillmentData);
   }
+
+  const paymentProviderService: PaymentProviderService = container.resolve(
+    "paymentProviderService"
+  );
+  await paymentProviderService.registerInstalledProviders(["ipay88"]);
+  // allRegions.forEach(async (el) => {
+  //   await regionService.addPaymentProvider(el.id, "ipay88");
+  // });
 
   console.info("Ending loader...");
 };
