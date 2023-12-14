@@ -102,6 +102,7 @@ class SESService extends NotificationService {
     this.orderEditService_ = orderEditService;
     const ses = new aws.SES({
       region: this.options_.region,
+
       credentials: {
         accessKeyId: this.options_.access_key_id,
         secretAccessKey: this.options_.secret_access_key,
@@ -114,6 +115,7 @@ class SESService extends NotificationService {
       host: "mail.gitechasia.com",
       port: 465,
       secure: true,
+      authMethod: "PLAIN",
       auth: {
         // TODO: replace `user` and `pass` values from <https://forwardemail.net>
         user: "savemax@gitechasia.com",

@@ -3,6 +3,7 @@ import storeContentRouter from "./store-content";
 import pageRouter from "./pages";
 import geoipRouter from "./geoip";
 import weightFulfillment from "./weight-fulfillment";
+import paymentRouter from "./payment";
 // Initialize a custom router
 const router = Router();
 
@@ -13,4 +14,5 @@ export function attachStoreRoutes(storeRouter: Router) {
   storeRouter.use("/pages", pageRouter);
   storeRouter.use("/geoip", geoipRouter);
   storeRouter.use("/weight-fulfillment", weightFulfillment);
+  storeRouter.use("/payment", paymentRouter);
 }
