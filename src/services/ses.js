@@ -109,7 +109,16 @@ class SESService extends NotificationService {
     });
 
     this.transporter_ = nodemailer.createTransport({
-      SES: { ses, aws },
+      // SES: { ses, aws },
+
+      host: "mail.gitechasia.com",
+      port: 465,
+      secure: true,
+      auth: {
+        // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+        user: "savemax@gitechasia.com",
+        pass: "Smax@1234",
+      },
     });
   }
 

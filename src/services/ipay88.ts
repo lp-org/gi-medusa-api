@@ -2,6 +2,7 @@
 // Merchant Key: mRncgj469i
 import {
   AbstractPaymentProcessor,
+  CartService,
   PaymentProcessorContext,
   PaymentProcessorError,
   PaymentProcessorSessionResponse,
@@ -9,7 +10,13 @@ import {
 } from "@medusajs/medusa";
 
 class IPay88Processor extends AbstractPaymentProcessor {
+  protected readonly cartService_: CartService;
   static identifier = "ipay88";
+  constructor({ cartService }: { cartService: CartService }) {
+    // @ts-ignore
+    super(...arguments);
+    this.cartService_ = cartService;
+  }
 
   async capturePayment(
     paymentSessionData: Record<string, unknown>
@@ -36,9 +43,16 @@ class IPay88Processor extends AbstractPaymentProcessor {
   async initiatePayment(
     context: PaymentProcessorContext
   ): Promise<PaymentProcessorError | PaymentProcessorSessionResponse> {
-    console.log(context);
+    const cart = await this.cartService_.retrieve(context.resource_id, {
+      relations: ["billing_address"],
+    });
+
     return {
-      session_data: {},
+      session_data: {
+        customer: context.customer,
+        billing_address: cart.billing_address,
+        currency: context.currency_code,
+      },
     };
   }
   async deletePayment(
@@ -65,7 +79,17 @@ class IPay88Processor extends AbstractPaymentProcessor {
   async updatePayment(
     context: PaymentProcessorContext
   ): Promise<void | PaymentProcessorError | PaymentProcessorSessionResponse> {
-    throw new Error("Method not implemented.");
+    const cart = await this.cartService_.retrieve(context.resource_id, {
+      relations: ["billing_address"],
+    });
+
+    return {
+      session_data: {
+        customer: context.customer,
+        billing_address: cart.billing_address,
+        currency: context.currency_code,
+      },
+    };
   }
   async updatePaymentData(
     sessionId: string,
