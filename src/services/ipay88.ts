@@ -33,7 +33,10 @@ class IPay88Processor extends AbstractPaymentProcessor {
         data: Record<string, unknown>;
       }
   > {
-    throw new Error("Method not implemented.");
+    return {
+      status: PaymentSessionStatus.AUTHORIZED,
+      data: paymentSessionData,
+    };
   }
   async cancelPayment(
     paymentSessionData: Record<string, unknown>
@@ -49,6 +52,9 @@ class IPay88Processor extends AbstractPaymentProcessor {
 
     return {
       session_data: {
+        is_test: process.env.IPAY88_TEST ? true : false,
+        cart_id: context.resource_id,
+        cart: cart,
         customer: context.customer,
         billing_address: cart.billing_address,
         currency: context.currency_code,
@@ -60,10 +66,26 @@ class IPay88Processor extends AbstractPaymentProcessor {
   ): Promise<Record<string, unknown> | PaymentProcessorError> {
     return {};
   }
+
+  /**
+   * 
+   * @param paymentSessionData 
+   * 00 Successful payment
+Invalid parameters Parameters pass in incorrect
+Record not found Cannot found the record
+Incorrect amount Amount different
+Payment fail Payment fail
+M88Admin Payment status updated by iPay88 Admin(Fail)
+   * @returns 
+   */
   async getPaymentStatus(
     paymentSessionData: Record<string, unknown>
   ): Promise<PaymentSessionStatus> {
-    throw new Error("Method not implemented.");
+    if (paymentSessionData.code === "Payment Fail")
+      return PaymentSessionStatus.ERROR;
+    else if (paymentSessionData.code === "00")
+      return PaymentSessionStatus.AUTHORIZED;
+    else return PaymentSessionStatus.ERROR;
   }
   async refundPayment(
     paymentSessionData: Record<string, unknown>,
@@ -74,7 +96,29 @@ class IPay88Processor extends AbstractPaymentProcessor {
   async retrievePayment(
     paymentSessionData: Record<string, unknown>
   ): Promise<Record<string, unknown> | PaymentProcessorError> {
-    throw new Error("Method not implemented.");
+    const amt: number = (paymentSessionData.cart as any).total;
+    // @ts-ignore
+    const res = await fetch(
+      "https://payment.ipay88.com.my/epayment/enquiry.asp",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        // @ts-ignore
+        body: new URLSearchParams({
+          MerchantCode: process.env.IPAY88_MERCHANT_CODE,
+          RefNo: paymentSessionData.cart_id,
+          Amount: paymentSessionData.isTest
+            ? "1.00"
+            : ((amt as number) / 100).toFixed(2),
+        }),
+      }
+    );
+    return {
+      code: await res.text(),
+      // code: "00",
+    };
   }
   async updatePayment(
     context: PaymentProcessorContext

@@ -118,8 +118,8 @@ class SESService extends NotificationService {
       authMethod: "PLAIN",
       auth: {
         // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-        user: "savemax@gitechasia.com",
-        pass: "Smax@1234",
+        user: process.env.SMTP_USERNAME,
+        pass: process.env.SMTP_PASSWORD,
       },
     });
   }
