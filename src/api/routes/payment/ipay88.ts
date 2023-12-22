@@ -66,7 +66,7 @@ iPay88router.post(
       "cartCompletionStrategy"
     );
     if (request.Status === "0") {
-      res.status(400).json({ error: "Payment Fail" });
+      res.status(400).json({ error: request.ErrDesc });
       return;
     }
     const manager: EntityManager = req.scope.resolve("manager");
@@ -134,7 +134,7 @@ iPay88router.post(
       return;
     }
     if (request.Status === "0") {
-      res.status(400).json({ error: "Payment Fail" });
+      res.status(400).json({ error: request.ErrDesc });
       return;
     }
     const cartService: CartService = req.scope.resolve("cartService");
