@@ -81,6 +81,7 @@ M88Admin Payment status updated by iPay88 Admin(Fail)
   async getPaymentStatus(
     paymentSessionData: Record<string, unknown>
   ): Promise<PaymentSessionStatus> {
+    console.log("getPaymentStatus", paymentSessionData);
     if (paymentSessionData.code === "Payment Fail")
       return PaymentSessionStatus.ERROR;
     else if (paymentSessionData.code === "00")
@@ -113,6 +114,7 @@ M88Admin Payment status updated by iPay88 Admin(Fail)
         }),
       }
     );
+
     return {
       code: await res.text(),
       // code: "00",
