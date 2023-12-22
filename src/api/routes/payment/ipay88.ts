@@ -65,6 +65,10 @@ iPay88router.post(
     const cartCompleteStrat: AbstractCartCompletionStrategy = req.scope.resolve(
       "cartCompletionStrategy"
     );
+    if (request.Status === "0") {
+      res.status(400).json({ error: "Payment Fail" });
+      return;
+    }
     const manager: EntityManager = req.scope.resolve("manager");
     const result = await manager.transaction(async (transactionManager) => {
       const idempotencyKeyServiceTx =
@@ -127,6 +131,10 @@ iPay88router.post(
     console.log(request);
     if (!(await validateSignature(request))) {
       res.status(400).json({ error: "Signature mismatch" });
+      return;
+    }
+    if (request.Status === "0") {
+      res.status(400).json({ error: "Payment Fail" });
       return;
     }
     const cartService: CartService = req.scope.resolve("cartService");

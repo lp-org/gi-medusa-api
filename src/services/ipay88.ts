@@ -98,6 +98,12 @@ M88Admin Payment status updated by iPay88 Admin(Fail)
     paymentSessionData: Record<string, unknown>
   ): Promise<Record<string, unknown> | PaymentProcessorError> {
     const amt: number = (paymentSessionData as any).total;
+
+    const payload = {
+      MerchantCode: process.env.IPAY88_MERCHANT_CODE,
+      RefNo: paymentSessionData.cart_id,
+      Amount: ((amt as number) / 100).toFixed(2),
+    };
     // @ts-ignore
     const res = await fetch(
       "https://payment.ipay88.com.my/epayment/enquiry.asp",
@@ -107,18 +113,18 @@ M88Admin Payment status updated by iPay88 Admin(Fail)
           "Content-Type": "application/x-www-form-urlencoded",
         },
         // @ts-ignore
-        body: new URLSearchParams({
-          MerchantCode: process.env.IPAY88_MERCHANT_CODE,
-          RefNo: paymentSessionData.cart_id,
-          Amount: ((amt as number) / 100).toFixed(2),
-        }),
+        body: new URLSearchParams(payload),
       }
     );
-
-    return {
+    console.log(
+      "Requery https://payment.ipay88.com.my/epayment/enquiry.asp with Payload:"
+    );
+    console.log(payload);
+    const result = {
       code: await res.text(),
-      // code: "00",
     };
+    console.log("Requery result: ", result.code);
+    return result;
   }
   async updatePayment(
     context: PaymentProcessorContext
