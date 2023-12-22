@@ -21,7 +21,7 @@ class IPay88Processor extends AbstractPaymentProcessor {
   async capturePayment(
     paymentSessionData: Record<string, unknown>
   ): Promise<Record<string, unknown> | PaymentProcessorError> {
-    return;
+    return {};
   }
   async authorizePayment(
     paymentSessionData: Record<string, unknown>,
