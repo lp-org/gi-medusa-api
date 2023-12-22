@@ -52,9 +52,9 @@ class IPay88Processor extends AbstractPaymentProcessor {
 
     return {
       session_data: {
-        is_test: process.env.IPAY88_TEST ? true : false,
         cart_id: context.resource_id,
         cart: cart,
+        total: context.amount,
         customer: context.customer,
         billing_address: cart.billing_address,
         currency: context.currency_code,
@@ -96,7 +96,7 @@ M88Admin Payment status updated by iPay88 Admin(Fail)
   async retrievePayment(
     paymentSessionData: Record<string, unknown>
   ): Promise<Record<string, unknown> | PaymentProcessorError> {
-    const amt: number = (paymentSessionData.cart as any).total;
+    const amt: number = (paymentSessionData as any).total;
     // @ts-ignore
     const res = await fetch(
       "https://payment.ipay88.com.my/epayment/enquiry.asp",
@@ -109,9 +109,7 @@ M88Admin Payment status updated by iPay88 Admin(Fail)
         body: new URLSearchParams({
           MerchantCode: process.env.IPAY88_MERCHANT_CODE,
           RefNo: paymentSessionData.cart_id,
-          Amount: paymentSessionData.isTest
-            ? "1.00"
-            : ((amt as number) / 100).toFixed(2),
+          Amount: ((amt as number) / 100).toFixed(2),
         }),
       }
     );
@@ -132,6 +130,7 @@ M88Admin Payment status updated by iPay88 Admin(Fail)
         customer: context.customer,
         billing_address: cart.billing_address,
         currency: context.currency_code,
+        total: context.amount,
       },
     };
   }

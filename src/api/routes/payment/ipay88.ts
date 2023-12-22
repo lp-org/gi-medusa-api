@@ -124,6 +124,7 @@ iPay88router.post(
   wrapHandler(async (req, res) => {
     console.log("------- WEBHOOK from IPAY88 --------- ");
     const request = req.body as IPaymentResponseProps;
+    console.log(request);
     if (!(await validateSignature(request))) {
       res.status(400).json({ error: "Signature mismatch" });
       return;
