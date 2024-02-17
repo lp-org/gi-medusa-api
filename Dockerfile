@@ -45,8 +45,10 @@ ENV STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
 ARG STORE_URL=${STORE_URL}
 ENV STORE_URL=${STORE_URL}
 
-CMD ["npx", "medusa", "migrations","run"]
 
 EXPOSE 80
-CMD [ "npm", "start" ]
+CMD ["npm", "start"]
+
+CMD ["npx", "medusa", "migrations","run"]
+
 
