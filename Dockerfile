@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 COPY ./package.json /usr/src/app/
 RUN npm install && npm cache clean --force  && npm install cross-env
 COPY ./ /usr/src/app
-ENV NODE_ENV production
+
 ENV PORT 80
 
 # environment variables
