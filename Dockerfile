@@ -50,6 +50,6 @@ EXPOSE 80
 CMD ["npm", "build"]
 CMD ["npm", "start"]
 
-CMD "medusa migrations run"
+CMD "npx medusa migrations run"
 
 
