@@ -34,7 +34,7 @@ const DATABASE_URL =
 console.log("DATABASE_URL:", DATABASE_URL);
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
-
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD || "";
 const plugins = [
   `medusa-fulfillment-manual`,
   `medusa-payment-manual`,
@@ -91,12 +91,18 @@ const modules = {
     resolve: "@medusajs/event-bus-redis",
     options: {
       redisUrl: REDIS_URL,
+      redisOptions: {
+        password: REDIS_PASSWORD,
+      },
     },
   },
   cacheService: {
     resolve: "@medusajs/cache-redis",
     options: {
       redisUrl: REDIS_URL,
+      redisOptions: {
+        password: REDIS_PASSWORD,
+      },
     },
   },
   // inventoryService: "@medusajs/inventory",
