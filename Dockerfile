@@ -47,8 +47,9 @@ ENV STORE_URL=${STORE_URL}
 
 
 EXPOSE 80
+CMD ["npm", "build"]
 CMD ["npm", "start"]
 
-CMD ["npx", "medusa", "migrations","run"]
+CMD "medusa migrations run"
 
 
