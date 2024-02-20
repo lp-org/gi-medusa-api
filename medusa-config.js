@@ -103,8 +103,12 @@ const modules = {
       },
     },
   },
-  // inventoryService: "@medusajs/inventory",
-  // stockLocationService: "@medusajs/stock-location",
+  inventoryService: {
+    resolve: "@medusajs/inventory",
+  },
+  stockLocationService: {
+    resolve: "@medusajs/stock-location",
+  },
 };
 
 /** @type {import('@medusajs/medusa').ConfigModule["projectConfig"]} */

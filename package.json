@@ -31,9 +31,10 @@
     "@medusajs/event-bus-local": "^1.9.4",
     "@medusajs/event-bus-redis": "^1.8.7",
     "@medusajs/file-local": "^1.0.1",
-    "@medusajs/inventory": "^1.9.1",
+    "@medusajs/inventory": "^1.11.6",
     "@medusajs/medusa": "^1.19.0",
-    "@medusajs/stock-location": "^1.9.1",
+    "@medusajs/medusa-cli": "^1.3.14",
+    "@medusajs/stock-location": "^1.11.5",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.9",
@@ -49,8 +50,7 @@
     "nodemailer": "^6.9.4",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "redis": "^4.6.7",
-    "typeorm": "^0.3.16",
-    "@medusajs/medusa-cli": "^1.3.14"
+    "typeorm": "^0.3.16"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
